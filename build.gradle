@@ -19,9 +19,13 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://repository.aspose.com/repo/" }
+
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile(group: 'com.aspose', name: 'aspose-imaging', version: '20.4', classifier: 'jdk16')
 }
