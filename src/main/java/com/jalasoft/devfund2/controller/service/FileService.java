@@ -11,11 +11,14 @@
 package com.jalasoft.devfund2.controller.service;
 
 import com.jalasoft.devfund2.controller.component.Properties;
+import com.jalasoft.devfund2.controller.constant.ErrorConstant;
+import com.jalasoft.devfund2.controller.exception.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,28 +35,30 @@ public class FileService {
     @Autowired
     private Properties properties;
 
-    public File store(MultipartFile file, String md5) throws Exception{
+    public File store(MultipartFile file, String md5) throws FileException{
         if(md5.trim().isEmpty()){
             //return ResponseEntity.badRequest().body(new Response("","error md5", "400"));
-            throw new Exception("md5 error");
+            throw new FileException(ErrorConstant.MD5_ERROR);
         }
-        /*if(md5.length() != 32){
-            throw new Exception("md5 error");
-        }*/
 
-        String fileInput;
-        String outputDir;
+        try {
 
-        String inputFolder = properties.getInputFolder();
-        Files.createDirectories(Paths.get(inputFolder));
-        fileInput = inputFolder + file.getOriginalFilename();
+            String fileInput;
+            String outputDir;
 
-        Path path = Paths.get(fileInput);
-        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            String inputFolder = properties.getInputFolder();
+            Files.createDirectories(Paths.get(inputFolder));
+            fileInput = inputFolder + file.getOriginalFilename();
 
-        outputDir = properties.getOutputFolder();
-        Files.createDirectories(Paths.get(outputDir));
+            Path path = Paths.get(fileInput);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return new File(fileInput);
+            outputDir = properties.getOutputFolder();
+            Files.createDirectories(Paths.get(outputDir));
+
+            return new File(fileInput);
+        } catch (IOException ex) {
+            throw new FileException(ErrorConstant.FILE_ERROR, ex);
+        }
     }
 }

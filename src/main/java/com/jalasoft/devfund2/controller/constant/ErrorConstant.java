@@ -8,26 +8,15 @@
  *
  */
 
-package com.jalasoft.devfund2.controller.response;
+package com.jalasoft.devfund2.controller.constant;
 
 /**
  * @author car
  * version 1.1
  **/
 
-public abstract class Response {
+public class ErrorConstant {
+    public static final String MD5_ERROR = "md5 error";
+    public static final String FILE_ERROR = "File error";
 
-    String status;
-
-    public Response(String status) {
-        this.status = status;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

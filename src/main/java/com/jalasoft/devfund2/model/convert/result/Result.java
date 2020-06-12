@@ -8,26 +8,26 @@
  *
  */
 
-package com.jalasoft.devfund2.controller.response;
+package com.jalasoft.devfund2.model.convert.result;
 
 /**
  * @author car
  * version 1.1
  **/
 
-public abstract class Response {
+public class Result {
 
-    String status;
+    private String text;
 
-    public Response(String status) {
-        this.status = status;
+    public Result(String text) {
+        this.text = text.trim();
     }
 
-    public String getStatus() {
-        return status;
+    public String getText() {
+        return text;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setText(String text) {
+        this.text = text;
     }
 }

@@ -15,19 +15,19 @@ package com.jalasoft.devfund2.controller.response;
  * version 1.1
  **/
 
-public abstract class Response {
+public class OKResponse extends Response{
+    String message;
 
-    String status;
-
-    public Response(String status) {
-        this.status = status;
+    public OKResponse(String message, String status) {
+        super(status);
+        this.message = message;
     }
 
-    public String getStatus() {
-        return status;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

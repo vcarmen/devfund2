@@ -8,13 +8,15 @@
  *
  */
 
-package com.jalasoft.devfund2.model;
+package com.jalasoft.devfund2.model.convert;
 
-import com.aspose.imaging.IImageCreator;
 import com.aspose.imaging.Image;
 import com.aspose.imaging.coreexceptions.ImageException;
 import com.aspose.imaging.imageoptions.PsdOptions;
-import com.jalasoft.devfund2.model.parameter.ConvertImageParam;
+import com.jalasoft.devfund2.model.convert.exception.ConvertException;
+import com.jalasoft.devfund2.model.convert.exception.ParameterInvalidException;
+import com.jalasoft.devfund2.model.convert.parameter.ConvertImageParam;
+import com.jalasoft.devfund2.model.convert.result.Result;
 
 import java.util.Locale;
 
@@ -23,9 +25,10 @@ import java.util.Locale;
  * version 1.1
  **/
 
-public class Converter {
+public class ConverterImageToPsd implements IConverter {
 
-    public String convert(ConvertImageParam param) throws Exception{
+    @Override
+    public Result convert(ConvertImageParam param) throws ParameterInvalidException, ConvertException {
         Locale locale = new Locale("en", "US");
         Locale.setDefault(locale);
 
@@ -38,10 +41,9 @@ public class Converter {
             Image img = Image.load(param.getInputFile().toString());
             // convert to PSD Conversion
             img.save(outputFile, new PsdOptions());
-            return "converted";
-
+            return new Result("converted");
         } catch (ImageException ex){
-            throw new Exception(ex.getMessage());
+            throw new ConvertException(ex);
         }
     }
 

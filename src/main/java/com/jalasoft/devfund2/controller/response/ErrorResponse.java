@@ -15,19 +15,20 @@ package com.jalasoft.devfund2.controller.response;
  * version 1.1
  **/
 
-public abstract class Response {
+public class ErrorResponse extends Response{
 
-    String status;
+    String error;
 
-    public Response(String status) {
-        this.status = status;
+    public ErrorResponse(String error, String status){
+        super(status);
+        this.error = error;
     }
 
-    public String getStatus() {
-        return status;
+    public String getError() {
+        return error;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setError(String error) {
+        this.error = error;
     }
 }

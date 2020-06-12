@@ -8,26 +8,23 @@
  *
  */
 
-package com.jalasoft.devfund2.controller.response;
+package com.jalasoft.devfund2.model.convert.exception;
 
 /**
  * @author car
  * version 1.1
  **/
 
-public abstract class Response {
+public class ConvertException extends Exception {
 
-    String status;
+    private static final String MESSAGE = "Error converting file";
 
-    public Response(String status) {
-        this.status = status;
+    public ConvertException(String currentMessage, Throwable ex){
+        super(currentMessage, ex);
     }
 
-    public String getStatus() {
-        return status;
+    public ConvertException(Throwable ex){
+        super(MESSAGE, ex);
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

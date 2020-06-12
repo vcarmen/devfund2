@@ -7,7 +7,9 @@
  * license agreement you entered into with Jalasoft.
  */
 
-package com.jalasoft.devfund2.model.parameter;
+package com.jalasoft.devfund2.model.convert.parameter;
+
+import com.jalasoft.devfund2.model.convert.exception.ParameterInvalidException;
 
 import java.io.File;
 
@@ -43,13 +45,13 @@ public class ConvertImageParam extends Parameter{
     }
 
     @Override
-    public void validate() throws Exception {
+    public void validate() throws ParameterInvalidException {
         super.validate();
         if (this.convertTo.trim().isEmpty()) {
-            throw new Exception("error convertTo");
+            throw new ParameterInvalidException();
         }
         if (!"psd".equals(this.convertTo.toLowerCase())) {
-            throw new Exception("error convertTo not valid");
+            throw new ParameterInvalidException(convertTo, "convertTo");
         }
     }
 }
