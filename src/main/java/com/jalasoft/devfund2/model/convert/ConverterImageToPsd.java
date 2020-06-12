@@ -25,7 +25,7 @@ import java.util.Locale;
  * version 1.1
  **/
 
-public class ConverterImageToPsd implements IConverter {
+public class ConverterImageToPsd implements IConverter<ConvertImageParam> {
 
     @Override
     public Result convert(ConvertImageParam param) throws ParameterInvalidException, ConvertException {
@@ -41,7 +41,7 @@ public class ConverterImageToPsd implements IConverter {
             Image img = Image.load(param.getInputFile().toString());
             // convert to PSD Conversion
             img.save(outputFile, new PsdOptions());
-            return new Result("converted");
+            return new Result(outputFile);
         } catch (ImageException ex){
             throw new ConvertException(ex);
         }

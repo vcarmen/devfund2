@@ -12,10 +12,10 @@ package com.jalasoft.devfund2.model.convert;
 
 import com.jalasoft.devfund2.model.convert.exception.ConvertException;
 import com.jalasoft.devfund2.model.convert.exception.ParameterInvalidException;
-import com.jalasoft.devfund2.model.convert.parameter.ConvertImageParam;
+import com.jalasoft.devfund2.model.convert.parameter.Parameter;
 import com.jalasoft.devfund2.model.convert.result.Result;
 
-public interface IConverter {
-    Result convert(ConvertImageParam param) throws ParameterInvalidException, ConvertException;
+public interface IConverter<T extends Parameter> {
+    Result convert(T param) throws ParameterInvalidException, ConvertException;
 
 }

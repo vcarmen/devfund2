@@ -15,19 +15,19 @@ package com.jalasoft.devfund2.controller.response;
  * version 1.1
  **/
 
-public abstract class Response {
+public abstract class Response<T> {
 
-    String status;
+    T status;
 
-    public Response(String status) {
+    public Response(T status) {
         this.status = status;
     }
 
-    public String getStatus() {
+    public T getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(T status) {
         this.status = status;
     }
 }

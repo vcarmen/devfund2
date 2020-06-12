@@ -16,6 +16,7 @@ import com.jalasoft.devfund2.controller.exception.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,12 +38,10 @@ public class FileService {
 
     public File store(MultipartFile file, String md5) throws FileException{
         if(md5.trim().isEmpty()){
-            //return ResponseEntity.badRequest().body(new Response("","error md5", "400"));
             throw new FileException(ErrorConstant.MD5_ERROR);
         }
 
         try {
-
             String fileInput;
             String outputDir;
 
@@ -60,5 +59,12 @@ public class FileService {
         } catch (IOException ex) {
             throw new FileException(ErrorConstant.FILE_ERROR, ex);
         }
+    }
+
+    public String getDownloadLink(File file) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/v1/download/")
+                .path(file.getName())
+                .toUriString();
     }
 }
