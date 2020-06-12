@@ -14,43 +14,35 @@ import com.aspose.imaging.IImageCreator;
 import com.aspose.imaging.Image;
 import com.aspose.imaging.coreexceptions.ImageException;
 import com.aspose.imaging.imageoptions.PsdOptions;
+import com.jalasoft.devfund2.model.parameter.ConvertImageParam;
 
-import java.awt.image.ImagingOpException;
-import java.io.File;
 import java.util.Locale;
 
 /**
- * @aythor car
+ * @author car
  * version 1.1
  **/
 
 public class Converter {
 
-    public String convert(String inputFile, String convertTo, String outputDir){
+    public String convert(ConvertImageParam param) throws Exception{
         Locale locale = new Locale("en", "US");
         Locale.setDefault(locale);
 
-        String outputFileName = this.getBaseName(new File(inputFile).getName());
-        String outputFile = outputDir + outputFileName+"."+convertTo.toLowerCase();
+        param.validate();
+        String outputFileName = param.getInputFileBaseName();
+        String outputFile = param.getOutputDir() + outputFileName+"."+param.getConvertTo().toLowerCase();
 
         try {
             // load document for conversion
-            Image img = Image.load(inputFile);
+            Image img = Image.load(param.getInputFile().toString());
             // convert to PSD Conversion
             img.save(outputFile, new PsdOptions());
             return "converted";
 
         } catch (ImageException ex){
-            return "error";
+            throw new Exception(ex.getMessage());
         }
     }
 
-    public static String getBaseName(String fileName) {
-        int index = fileName.lastIndexOf('.');
-        if (index == -1) {
-            return fileName;
-        } else {
-            return fileName.substring(0, index);
-        }
-    }
 }
