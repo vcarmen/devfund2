@@ -32,10 +32,13 @@ public class Parameter {
 
     public void validate() throws ParameterInvalidException {
         if (inputFile.isHidden()) {
-            throw new ParameterInvalidException();
+            throw new ParameterInvalidException("file", inputFile.getName());
         }
         if (!inputFile.isFile()) {
-            throw new ParameterInvalidException();
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
+        if (!inputFile.exists()){
+            throw new ParameterInvalidException("file", inputFile.getName());
         }
 
     }

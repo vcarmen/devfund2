@@ -24,6 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * @author car
@@ -37,26 +40,51 @@ public class FileService {
     private Properties properties;
 
     public File store(MultipartFile file, String md5) throws FileException{
-        if(md5.trim().isEmpty()){
-            throw new FileException(ErrorConstant.MD5_ERROR);
-        }
-
         try {
-            String fileInput;
-            String outputDir;
+            this.createOutPutFolder();
+            Path path = this.getFilePath(file.getOriginalFilename());
+            String currentMd5 = this.getMd5(path);
+            this.validateMd5(currentMd5, md5);
 
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            return new File(path.toString());
+        } catch (IOException ex) {
+            throw new FileException(ErrorConstant.FILE_ERROR, ex);
+        }
+    }
+
+    private void validateMd5(String currentMd5, String md5) throws  FileException{
+        if (!currentMd5.equals(md5)){
+            throw new FileException("Invalid file received");
+        }
+    }
+
+    private String getMd5(Path path) throws FileException{
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(Files.readAllBytes(path));
+            byte[] hash = messageDigest.digest();
+            return DatatypeConverter.printHexBinary(hash).toUpperCase();
+        } catch(NoSuchAlgorithmException | IOException ex){
+            throw new FileException(ErrorConstant.FILE_ERROR, ex);
+        }
+    }
+
+    private Path getFilePath(String fileInput) throws FileException{
+        try {
             String inputFolder = properties.getInputFolder();
             Files.createDirectories(Paths.get(inputFolder));
-            fileInput = inputFolder + file.getOriginalFilename();
+            return Paths.get(inputFolder + fileInput);
+        } catch (IOException ex){
+            throw new FileException(ErrorConstant.FILE_ERROR, ex);
+        }
+    }
 
-            Path path = Paths.get(fileInput);
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-            outputDir = properties.getOutputFolder();
+    private void createOutPutFolder() throws FileException{
+        try {
+            String outputDir = properties.getOutputFolder();
             Files.createDirectories(Paths.get(outputDir));
-
-            return new File(fileInput);
-        } catch (IOException ex) {
+        } catch (IOException ex){
             throw new FileException(ErrorConstant.FILE_ERROR, ex);
         }
     }

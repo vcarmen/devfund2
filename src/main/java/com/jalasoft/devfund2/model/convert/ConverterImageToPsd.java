@@ -31,17 +31,15 @@ public class ConverterImageToPsd implements IConverter<ConvertImageParam> {
     public Result convert(ConvertImageParam param) throws ParameterInvalidException, ConvertException {
         Locale locale = new Locale("en", "US");
         Locale.setDefault(locale);
-
-        param.validate();
-        String outputFileName = param.getInputFileBaseName();
-        String outputFile = param.getOutputDir() + outputFileName+"."+param.getConvertTo().toLowerCase();
-
         try {
-            // load document for conversion
+            param.validate();
+            String outputFileName = param.getInputFileBaseName();
+            String outputFile = param.getOutputDir() + outputFileName+"."+param.getConvertTo().toLowerCase();
             Image img = Image.load(param.getInputFile().toString());
-            // convert to PSD Conversion
             img.save(outputFile, new PsdOptions());
             return new Result(outputFile);
+        } catch (NullPointerException ex){
+            throw new ParameterInvalidException(ex);
         } catch (ImageException ex){
             throw new ConvertException(ex);
         }
