@@ -10,10 +10,10 @@
 
 package com.jalasoft.devfund2.common.validation;
 
+import com.jalasoft.devfund2.common.configuration.ConfigurationProperty;
 import com.jalasoft.devfund2.common.constant.ErrorMessageConstant;
 import com.jalasoft.devfund2.common.exception.InvalidDataException;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,15 +24,16 @@ import java.util.List;
 public class ConvertToValidation implements IValidatorStrategy{
 
     private String convertTo;
-    private final static List<String> SUPPORTED_FORMATS = Arrays.asList("psd", "pdf");
+    private List<String> supportedFormats;
 
-    public ConvertToValidation(String convertTo) {
+    public ConvertToValidation(String convertTo) throws InvalidDataException{
         this.convertTo = convertTo;
+        this.supportedFormats = ConfigurationProperty.getSupportedFormats();
     }
 
     @Override
     public void validate() throws InvalidDataException {
-        if (!SUPPORTED_FORMATS.contains(convertTo)){
+        if (!supportedFormats.contains(convertTo)){
             throw new InvalidDataException(ErrorMessageConstant.CONVERT_TO_ERROR_MESSAGE);
         }
     }

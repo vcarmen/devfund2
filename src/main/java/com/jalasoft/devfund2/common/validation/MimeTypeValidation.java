@@ -10,10 +10,10 @@
 
 package com.jalasoft.devfund2.common.validation;
 
+import com.jalasoft.devfund2.common.configuration.ConfigurationProperty;
 import com.jalasoft.devfund2.common.constant.ErrorMessageConstant;
 import com.jalasoft.devfund2.common.exception.InvalidDataException;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,19 +24,16 @@ import java.util.List;
 public class MimeTypeValidation implements IValidatorStrategy {
 
     private String mimeType;
-    private final static List<String> MIME_TYPE_LIST = Arrays.asList(
-            "image/gif",
-            "image/png",
-            "image/bmp",
-            "image/jpeg");
+    private List<String> mimeTypeList;
 
-    public MimeTypeValidation(String mimeType) {
+    public MimeTypeValidation(String mimeType) throws InvalidDataException {
         this.mimeType = mimeType;
+        this.mimeTypeList = ConfigurationProperty.getMimeType();
     }
 
     @Override
     public void validate() throws InvalidDataException {
-        if (!MIME_TYPE_LIST.contains(mimeType)){
+        if (!mimeTypeList.contains(mimeType)){
             throw new InvalidDataException(ErrorMessageConstant.MIME_TYPE_ERROR_MESSAGE);
         }
     }
