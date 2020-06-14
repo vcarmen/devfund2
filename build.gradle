@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repository.aspose.com/repo/" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile(group: 'com.aspose', name: 'aspose-imaging', version: '20.4', classifier: 'jdk16')
+    compile(group: 'com.aspose', name: 'aspose-pdf', version: '20.5', classifier: 'jdk17')
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
+}
