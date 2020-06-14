@@ -17,7 +17,7 @@ package com.jalasoft.devfund2.common.constant;
 
 public class ErrorMessageConstant {
 
-    public final static String NOT_NULL_OR_EMPTY_MESSAGE = "% cannot be null or empty.";
+    public final static String NOT_NULL_OR_EMPTY_MESSAGE = "%s cannot be null or empty.";
     public final static String MD5_ERROR_MESSAGE = "Invalid md5.";
     public final static String MULTIPART_ERROR_MESSAGE = "Invalid multipart file.";
     public final static String MIME_TYPE_ERROR_MESSAGE = "Invalid mime type.";

@@ -88,4 +88,16 @@ public class ConverterImageToPsdTest {
         ConverterImageToPsd con = new ConverterImageToPsd();
         con.convert(null);
     }
+
+    @Test(expected =  InvalidDataException.class)
+    public void convertToEmpty() throws InvalidDataException, ConvertException {
+        ConvertImageParam param = new ConvertImageParam(
+                new File(PATH + "tree.jpg"),
+                "",
+                OUTPUT_PATH
+        );
+
+        ConverterImageToPsd con = new ConverterImageToPsd();
+        con.convert(param);
+    }
 }
