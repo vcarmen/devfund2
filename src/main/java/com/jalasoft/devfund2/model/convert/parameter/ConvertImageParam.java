@@ -61,9 +61,9 @@ public class ConvertImageParam extends Parameter{
 
         List<IValidatorStrategy> strategyList = Arrays.asList(
                 new FileValidation(this.inputFile, true),
+                new NotNullOrEmptyValidation("convertTo", this.convertTo),
                 new NotNullOrEmptyValidation("outputDir", this.outputDir),
                 new FileValidation(new File(this.outputDir), false),
-                new NotNullOrEmptyValidation("convertTo", this.convertTo),
                 new ConvertToValidation(this.convertTo)
         );
 
