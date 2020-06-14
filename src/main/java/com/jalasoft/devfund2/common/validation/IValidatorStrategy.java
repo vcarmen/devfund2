@@ -8,14 +8,10 @@
  *
  */
 
-package com.jalasoft.devfund2.model.convert;
+package com.jalasoft.devfund2.common.validation;
 
 import com.jalasoft.devfund2.common.exception.InvalidDataException;
-import com.jalasoft.devfund2.model.convert.exception.ConvertException;
-import com.jalasoft.devfund2.model.convert.parameter.Parameter;
-import com.jalasoft.devfund2.model.convert.result.Result;
 
-public interface IConverter<T extends Parameter> {
-    Result convert(T param) throws InvalidDataException, ConvertException;
-
+public interface IValidatorStrategy {
+    void validate() throws InvalidDataException;
 }

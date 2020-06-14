@@ -55,7 +55,7 @@ public class FileService {
 
     private void validateMd5(String currentMd5, String md5) throws  FileException{
         if (!currentMd5.equals(md5)){
-            throw new FileException("Invalid file received");
+            throw new FileException("Invalid file received, md5 does not match");
         }
     }
 

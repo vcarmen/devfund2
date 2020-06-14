@@ -13,8 +13,8 @@ package com.jalasoft.devfund2.model.convert;
 import com.aspose.imaging.Image;
 import com.aspose.imaging.coreexceptions.ImageException;
 import com.aspose.imaging.imageoptions.PsdOptions;
+import com.jalasoft.devfund2.common.exception.InvalidDataException;
 import com.jalasoft.devfund2.model.convert.exception.ConvertException;
-import com.jalasoft.devfund2.model.convert.exception.ParameterInvalidException;
 import com.jalasoft.devfund2.model.convert.parameter.ConvertImageParam;
 import com.jalasoft.devfund2.model.convert.result.Result;
 
@@ -28,18 +28,18 @@ import java.util.Locale;
 public class ConverterImageToPsd implements IConverter<ConvertImageParam> {
 
     @Override
-    public Result convert(ConvertImageParam param) throws ParameterInvalidException, ConvertException {
+    public Result convert(ConvertImageParam param) throws InvalidDataException, ConvertException {
         Locale locale = new Locale("en", "US");
         Locale.setDefault(locale);
         try {
             param.validate();
             String outputFileName = param.getInputFileBaseName();
-            String outputFile = param.getOutputDir() + outputFileName+"."+param.getConvertTo().toLowerCase();
+            String outputFile = param.getOutputDir() + outputFileName + "." + param.getConvertTo().toLowerCase();
             Image img = Image.load(param.getInputFile().toString());
             img.save(outputFile, new PsdOptions());
             return new Result(outputFile);
         } catch (NullPointerException ex){
-            throw new ParameterInvalidException(ex);
+            throw new InvalidDataException(ex);
         } catch (ImageException ex){
             throw new ConvertException(ex);
         }

@@ -10,6 +10,7 @@
 
 package com.jalasoft.devfund2.controller.request;
 
+import com.jalasoft.devfund2.common.exception.InvalidDataException;
 import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +44,6 @@ public abstract class RequestParameter {
         this.file = file;
     }
 
-    public abstract void validate() throws RequestParamInvalidException;
+    public abstract void validate() throws InvalidDataException;
 
 }

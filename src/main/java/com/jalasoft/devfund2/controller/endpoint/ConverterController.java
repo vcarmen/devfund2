@@ -1,8 +1,8 @@
 package com.jalasoft.devfund2.controller.endpoint;
 
+import com.jalasoft.devfund2.common.exception.InvalidDataException;
 import com.jalasoft.devfund2.controller.component.Properties;
 import com.jalasoft.devfund2.controller.exception.FileException;
-import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
 import com.jalasoft.devfund2.controller.request.RequestConvertFileParameter;
 import com.jalasoft.devfund2.controller.request.RequestConvertImageParameter;
 import com.jalasoft.devfund2.controller.response.ErrorResponse;
@@ -43,14 +43,19 @@ public class ConverterController {
             String outputDir = properties.getOutputFolder();
 
             IConverter<ConvertImageParam> con = new ConverterImageToPsd();
-            Result result = con.convert(new ConvertImageParam(imageFile, parameter.getConvertTo(), outputDir));
+            Result result = con.convert(
+                    new ConvertImageParam(
+                            imageFile,
+                            parameter.getConvertTo(),
+                            outputDir)
+            );
 
             String fileDownloadUri = fileService.getDownloadLink(new File(result.getText()));
 
             return ResponseEntity.ok().body(
                     new OKResponse<Integer>(fileDownloadUri, HttpServletResponse.SC_OK)
             );
-        } catch (RequestParamInvalidException ex) {
+        } catch (InvalidDataException ex) {
             return ResponseEntity.badRequest().body(
                     new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
             );
@@ -58,11 +63,6 @@ public class ConverterController {
             return ResponseEntity.badRequest().body(
                     new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
             );
-        } catch (ParameterInvalidException ex){
-            return ResponseEntity.badRequest().body(
-                    new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
-            );
-
         } catch (ConvertException ex){
             return ResponseEntity.badRequest().body(
                     new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
@@ -77,6 +77,7 @@ public class ConverterController {
     @PostMapping("/converter/file")
     public ResponseEntity convertFile(RequestConvertFileParameter parameter) {
         try {
+            parameter.validate();
             File imageFile = fileService.store(parameter.getFile(), parameter.getMd5());
 
             IConverter<ConvertFileParam> con = new ConverterFileToPDF();
@@ -90,15 +91,14 @@ public class ConverterController {
             return ResponseEntity.ok().body(
                     new OKResponse<Integer>(result.getText(), HttpServletResponse.SC_OK)
             );
+        } catch (InvalidDataException ex) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
+            );
         } catch (FileException ex) {
             return ResponseEntity.badRequest().body(
                     new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
             );
-        } catch (ParameterInvalidException ex){
-            return ResponseEntity.badRequest().body(
-                    new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
-            );
-
         } catch (ConvertException ex){
             return ResponseEntity.badRequest().body(
                     new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)

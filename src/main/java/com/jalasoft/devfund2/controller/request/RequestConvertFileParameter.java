@@ -10,8 +10,19 @@
 
 package com.jalasoft.devfund2.controller.request;
 
+import com.jalasoft.devfund2.common.exception.InvalidDataException;
+import com.jalasoft.devfund2.common.validation.ConvertToValidation;
+import com.jalasoft.devfund2.common.validation.IValidatorStrategy;
+import com.jalasoft.devfund2.common.validation.MD5Validation;
+import com.jalasoft.devfund2.common.validation.MimeTypeValidation;
+import com.jalasoft.devfund2.common.validation.MultipartValidation;
+import com.jalasoft.devfund2.common.validation.NotNullOrEmptyValidation;
+import com.jalasoft.devfund2.common.validation.ValidationContext;
 import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author car
@@ -35,24 +46,18 @@ public class RequestConvertFileParameter extends RequestParameter{
     }
 
     @Override
-    public void validate() throws RequestParamInvalidException {
-        if (this.md5 == null || this.md5.trim().isEmpty()){
-            throw new RequestParamInvalidException("md5 is null or empty");
-        }
-        if (!this.md5.matches("[a-fA-F0-9]{32}")){
-            throw new RequestParamInvalidException("md5 is invalid");
-        }
-        if (this.file == null || this.file.isEmpty()){
-            throw new RequestParamInvalidException("file is null or empty");
-        }
-        if (this.file.getContentType() == null || !this.file.getContentType().startsWith("image")){
-            throw new RequestParamInvalidException("invalid file format");
-        }
-        if (this.file.getName().contains("..")){
-            throw new RequestParamInvalidException("invalid file name");
-        }
-        if (this.options == null){
-            throw new RequestParamInvalidException("options is null");
-        }
+    public void validate() throws InvalidDataException {
+
+        List<IValidatorStrategy> strategyList = Arrays.asList(
+                new NotNullOrEmptyValidation("md5", this.md5),
+                new MD5Validation(this.md5),
+                new MultipartValidation(this.file),
+                new NotNullOrEmptyValidation("options", this.options)
+                //validation options content, to be implemented
+        );
+
+        ValidationContext context = new ValidationContext(strategyList);
+        context.validate();
+
     }
 }

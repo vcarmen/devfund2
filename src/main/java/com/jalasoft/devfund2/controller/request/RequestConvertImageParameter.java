@@ -10,7 +10,14 @@
 
 package com.jalasoft.devfund2.controller.request;
 
-import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
+import com.jalasoft.devfund2.common.exception.InvalidDataException;
+import com.jalasoft.devfund2.common.validation.ConvertToValidation;
+import com.jalasoft.devfund2.common.validation.IValidatorStrategy;
+import com.jalasoft.devfund2.common.validation.MD5Validation;
+import com.jalasoft.devfund2.common.validation.MimeTypeValidation;
+import com.jalasoft.devfund2.common.validation.MultipartValidation;
+import com.jalasoft.devfund2.common.validation.NotNullOrEmptyValidation;
+import com.jalasoft.devfund2.common.validation.ValidationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -23,7 +30,7 @@ import java.util.List;
 
 public class RequestConvertImageParameter extends RequestParameter{
     private String convertTo;
-    private final static List<String> SUPPORTED_FORMATS = Arrays.asList("pds","bmp");
+    private final static List<String> SUPPORTED_FORMATS = Arrays.asList("psd","bmp");
 
     public RequestConvertImageParameter(String convertTo, String md5, MultipartFile file) {
         super(md5, file);
@@ -39,27 +46,18 @@ public class RequestConvertImageParameter extends RequestParameter{
     }
 
     @Override
-    public void validate() throws RequestParamInvalidException {
-        if (this.md5 == null || this.md5.trim().isEmpty()){
-            throw new RequestParamInvalidException("md5 is null or empty");
-        }
-        if (!this.md5.matches("[a-fA-F0-9]{32}")){
-            throw new RequestParamInvalidException("md5 is invalid");
-        }
-        if (this.file == null || this.file.isEmpty()){
-            throw new RequestParamInvalidException("file is null or empty");
-        }
-        if (this.file.getContentType() == null || !this.file.getContentType().startsWith("image")){
-            throw new RequestParamInvalidException("invalid file format");
-        }
-        if (this.file.getName().contains("..")){
-            throw new RequestParamInvalidException("invalid file name");
-        }
-        if (this.convertTo == null || this.convertTo.trim().isEmpty()){
-            throw new RequestParamInvalidException("convertTo is null or empty");
-        }
-        if (!SUPPORTED_FORMATS.contains(convertTo)){
-            throw new RequestParamInvalidException("convertTo is not allowed");
-        }
+    public void validate() throws InvalidDataException {
+        List<IValidatorStrategy> strategyList = Arrays.asList(
+                new NotNullOrEmptyValidation("md5", this.md5),
+                new MD5Validation(this.md5),
+                new MultipartValidation(this.file),
+                new MimeTypeValidation(this.file.getContentType()),
+                new NotNullOrEmptyValidation("convertTo", this.convertTo),
+                new ConvertToValidation(this.convertTo.toLowerCase())
+        );
+
+        ValidationContext context = new ValidationContext(strategyList);
+        context.validate();
+
     }
 }

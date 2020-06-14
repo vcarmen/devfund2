@@ -8,29 +8,27 @@
  *
  */
 
-package com.jalasoft.devfund2.model.convert.parameter;
+package com.jalasoft.devfund2.common.validation;
 
 import com.jalasoft.devfund2.common.exception.InvalidDataException;
-import com.jalasoft.devfund2.model.convert.exception.ParameterInvalidException;
 
-import java.io.File;
+import java.util.List;
 
 /**
  * @author car
  * version 1.1
  **/
 
-public abstract class Parameter {
-    protected File inputFile;
+public class ValidationContext {
+    List<IValidatorStrategy> validationList;
 
-    public Parameter(File inputFile) {
-        this.inputFile = inputFile;
+    public ValidationContext(List<IValidatorStrategy> validationList) {
+        this.validationList = validationList;
     }
 
-    public File getInputFile() {
-        return inputFile;
+    public void validate() throws InvalidDataException {
+        for (IValidatorStrategy strategy : validationList){
+            strategy.validate();
+        }
     }
-
-    public abstract void validate() throws InvalidDataException;
-
 }
