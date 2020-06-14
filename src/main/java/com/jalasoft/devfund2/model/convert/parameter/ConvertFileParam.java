@@ -10,6 +10,8 @@
 
 package com.jalasoft.devfund2.model.convert.parameter;
 
+import com.jalasoft.devfund2.model.convert.exception.ParameterInvalidException;
+
 import java.io.File;
 
 /**
@@ -41,5 +43,28 @@ public class ConvertFileParam extends Parameter{
 
     public void setOutputDir(String outputDir) {
         this.outputDir = outputDir;
+    }
+
+    @Override
+    public void validate() throws ParameterInvalidException {
+        if (inputFile.isHidden()) {
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
+        if (!inputFile.isFile()) {
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
+        if (!inputFile.exists()){
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
+    }
+
+    public String getInputFileBaseName() {
+        String fileName = this.inputFile.getName();
+        int index = fileName.lastIndexOf('.');
+        if (index == -1) {
+            return fileName;
+        } else {
+            return fileName.substring(0, index);
+        }
     }
 }

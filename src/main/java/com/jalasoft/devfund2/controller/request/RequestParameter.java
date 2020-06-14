@@ -10,6 +10,7 @@
 
 package com.jalasoft.devfund2.controller.request;
 
+import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -17,23 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
  * version 1.1
  **/
 
-public class RequestConvertParameter {
-    private String convertTo;
-    private String md5;
-    private MultipartFile file;
+public abstract class RequestParameter {
+    protected String md5;
+    protected MultipartFile file;
 
-    public RequestConvertParameter(String convertTo, String md5, MultipartFile file) {
-        this.convertTo = convertTo;
+    public RequestParameter(String md5, MultipartFile file) {
         this.md5 = md5;
         this.file = file;
-    }
-
-    public String getConvertTo() {
-        return convertTo;
-    }
-
-    public void setConvertTo(String convertTo) {
-        this.convertTo = convertTo;
     }
 
     public String getMd5() {
@@ -51,4 +42,7 @@ public class RequestConvertParameter {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
+
+    public abstract void validate() throws RequestParamInvalidException;
+
 }

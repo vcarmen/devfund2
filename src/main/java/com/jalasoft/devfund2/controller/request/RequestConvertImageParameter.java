@@ -13,25 +13,29 @@ package com.jalasoft.devfund2.controller.request;
 import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author car
  * version 1.1
  **/
 
-public class RequestConvertFileParameter extends RequestParameter{
-    private String options;
+public class RequestConvertImageParameter extends RequestParameter{
+    private String convertTo;
+    private final static List<String> SUPPORTED_FORMATS = Arrays.asList("pds","bmp");
 
-    public RequestConvertFileParameter(String md5, MultipartFile file, String options) {
+    public RequestConvertImageParameter(String convertTo, String md5, MultipartFile file) {
         super(md5, file);
-        this.options = options;
+        this.convertTo = convertTo;
     }
 
-    public String getOptions() {
-        return options;
+    public String getConvertTo() {
+        return convertTo;
     }
 
-    public void setOptions(String options) {
-        this.options = options;
+    public void setConvertTo(String convertTo) {
+        this.convertTo = convertTo;
     }
 
     @Override
@@ -51,8 +55,11 @@ public class RequestConvertFileParameter extends RequestParameter{
         if (this.file.getName().contains("..")){
             throw new RequestParamInvalidException("invalid file name");
         }
-        if (this.options == null){
-            throw new RequestParamInvalidException("options is null");
+        if (this.convertTo == null || this.convertTo.trim().isEmpty()){
+            throw new RequestParamInvalidException("convertTo is null or empty");
+        }
+        if (!SUPPORTED_FORMATS.contains(convertTo)){
+            throw new RequestParamInvalidException("convertTo is not allowed");
         }
     }
 }

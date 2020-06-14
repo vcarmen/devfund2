@@ -2,8 +2,9 @@ package com.jalasoft.devfund2.controller.endpoint;
 
 import com.jalasoft.devfund2.controller.component.Properties;
 import com.jalasoft.devfund2.controller.exception.FileException;
+import com.jalasoft.devfund2.controller.exception.RequestParamInvalidException;
 import com.jalasoft.devfund2.controller.request.RequestConvertFileParameter;
-import com.jalasoft.devfund2.controller.request.RequestConvertParameter;
+import com.jalasoft.devfund2.controller.request.RequestConvertImageParameter;
 import com.jalasoft.devfund2.controller.response.ErrorResponse;
 import com.jalasoft.devfund2.controller.response.OKResponse;
 import com.jalasoft.devfund2.controller.service.FileService;
@@ -35,8 +36,9 @@ public class ConverterController {
     private FileService fileService;
 
     @PostMapping("/converter")
-    public ResponseEntity convert(RequestConvertParameter parameter) {
+    public ResponseEntity convert(RequestConvertImageParameter parameter) {
         try {
+            parameter.validate();
             File imageFile = fileService.store(parameter.getFile(), parameter.getMd5());
             String outputDir = properties.getOutputFolder();
 
@@ -47,6 +49,10 @@ public class ConverterController {
 
             return ResponseEntity.ok().body(
                     new OKResponse<Integer>(fileDownloadUri, HttpServletResponse.SC_OK)
+            );
+        } catch (RequestParamInvalidException ex) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse<Integer>(ex.getMessage(), HttpServletResponse.SC_BAD_REQUEST)
             );
         } catch (FileException ex) {
             return ResponseEntity.badRequest().body(

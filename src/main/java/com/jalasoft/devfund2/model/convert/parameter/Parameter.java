@@ -19,8 +19,8 @@ import java.io.File;
  * version 1.1
  **/
 
-public class Parameter {
-    File inputFile;
+public abstract class Parameter {
+    protected File inputFile;
 
     public Parameter(File inputFile) {
         this.inputFile = inputFile;
@@ -30,26 +30,6 @@ public class Parameter {
         return inputFile;
     }
 
-    public void validate() throws ParameterInvalidException {
-        if (inputFile.isHidden()) {
-            throw new ParameterInvalidException("file", inputFile.getName());
-        }
-        if (!inputFile.isFile()) {
-            throw new ParameterInvalidException("file", inputFile.getName());
-        }
-        if (!inputFile.exists()){
-            throw new ParameterInvalidException("file", inputFile.getName());
-        }
+    public abstract void validate() throws ParameterInvalidException;
 
-    }
-
-    public String getInputFileBaseName() {
-        String fileName = this.inputFile.getName();
-        int index = fileName.lastIndexOf('.');
-        if (index == -1) {
-            return fileName;
-        } else {
-            return fileName.substring(0, index);
-        }
-    }
 }

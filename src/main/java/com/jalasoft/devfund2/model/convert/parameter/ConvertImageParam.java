@@ -46,7 +46,15 @@ public class ConvertImageParam extends Parameter{
 
     @Override
     public void validate() throws ParameterInvalidException {
-        super.validate();
+        if (inputFile.isHidden()) {
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
+        if (!inputFile.isFile()) {
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
+        if (!inputFile.exists()){
+            throw new ParameterInvalidException("file", inputFile.getName());
+        }
         if (this.convertTo.trim().isEmpty()) {
             throw new ParameterInvalidException();
         }
@@ -54,4 +62,15 @@ public class ConvertImageParam extends Parameter{
             throw new ParameterInvalidException(convertTo, "convertTo");
         }
     }
+
+    public String getInputFileBaseName() {
+        String fileName = this.inputFile.getName();
+        int index = fileName.lastIndexOf('.');
+        if (index == -1) {
+            return fileName;
+        } else {
+            return fileName.substring(0, index);
+        }
+    }
+
 }
